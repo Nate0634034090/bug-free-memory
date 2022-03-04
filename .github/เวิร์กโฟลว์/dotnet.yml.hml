@@ -1,0 +1,91 @@
+name: .NET
+
+on:
+  push:curl -I https://api.github.com/user
+> HTTP/2 200
+> Cache-Control: private, max-age=60
+> ETag: "644b5b0155e6404a9cc4bd9d8b1ae730"
+> Last-Modified: Thu, 05 Jul 2012 15:31:30 GMT
+> Vary: Accept, Authorization, Cookie
+> X-RateLimit-Limit: 5000
+> X-RateLimit-Remaining: 4996
+> X-RateLimit-Reset: 1372700873
+
+$ curl -I https://api.github.com/user -H 'If-None-Match: "644b5b0155e6404a9cc4bd9d8b1ae730"'
+> HTTP/2 304
+> Cache-Control: private, max-age=60
+> ETag: "644b5b0155e6404a9cc4bd9d8b1ae730"
+> Last-Modified: Thu, 05 Jul 2012 15:31:30 GMT
+> Vary: Accept, Authorization, Cookie
+> X-RateLimit-Limit: 5000
+> X-RateLimit-Remaining: 4996
+> X-RateLimit-Reset: 1372700873
+
+$ curl -I https://api.github.com/user -H "If-Modified-Since: Thu, 05 Jul 2012 15:31:30 GMT"
+> HTTP/2 304
+> Cache-Control: private, max-age=60
+> Last-Modified: Thu, 05 Jul 2012 15:31:30 GMT
+> Vary: Accept, Authorization, Cookie
+> X-RateLimit-Limit: 5000
+> X-RateLimit-Remaining: 4996
+> X-RateLimit-Reset: 1372700873
+    branches: [ main ]
+  pull_request:commit ea7ea6fffde15ca181fa9b692e90366e933604db
+tree e68552d6c259474c6f61b292e740ddbaa9a40c22
+parent 760586592b669f709c7fd9ede8bba0f352473dc0
+author Root <root@getpantheon.com> 1638432102 +0000
+committer Root <root@getpantheon.com> 1638432102 +0000
+
+    "Applying pantheon.yml file"
+
+diff --git a/pantheon.yml b/pantheon.yml
+new file mode 100644
+index 0000000..d94f16a
+--- /dev/null
++++ b/pantheon.yml
+@@ -0,0 +1,3 @@
++# Put overrides to your pantheon.upstream.yml file here.
++# For more information, see: https://pantheon.io/docs/pantheon-yml/
++api_version: 1
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest$ curl -IH 'User-Agent: ' https://api.github.com/meta
+> HTTP/1.0 403 Forbidden
+> Connection: close
+> Content-Type: text/html
+
+> Request forbidden by administrative rules.
+> Please make sure your request has a User-Agent header.
+> Check  for other possible causes.
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:commit ea7ea6fffde15ca181fa9b692e90366e933604db
+tree e68552d6c259474c6f61b292e740ddbaa9a40c22
+parent 760586592b669f709c7fd9ede8bba0f352473dc0
+author Root <root@getpantheon.com> 1638432102 +0000
+committer Root <root@getpantheon.com> 1638432102 +0000
+
+    "Applying pantheon.yml file"
+
+diff --git a/pantheon.yml b/pantheon.yml
+new file mode 100644
+index 0000000..d94f16a
+--- /dev/null
++++ b/pantheon.yml
+@@ -0,0 +1,3 @@
++# Put overrides to your pantheon.upstream.yml file here.
++# For more information, see: https://pantheon.io/docs/pantheon-yml/
++api_version: 1
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal

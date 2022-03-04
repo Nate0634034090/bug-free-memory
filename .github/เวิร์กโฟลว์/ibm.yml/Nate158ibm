@@ -1,0 +1,297 @@
+# This workflow will build a docker container, publish it to IBM Container Registry, and deploy it to IKS when there is a push to the main re = /[[:graph:]]+/mix
+str = 'A|m0st 
+
+ <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18"> 
+
+     <style> 
+
+         .st0{fill:#fff} 
+
+     </style> 
+
+     <path class="st0" d="M9 0C4 0 0 4 0 9s4 9 9 9 9-4 9-9-4-9-9-9zM6.3 5.6c.7 0 1.3.6 1.3 1.3S7 8.2 6.3 8.2 5 7.7 5 7c0-.8.6-1.4 1.3-1.4zm6.5 5.9c-.5 1.7-2.1 2.8-3.8 2.8-1.8 0-3.3-1.1-3.8-2.8-.1-.4.1-.7.4-.8s.7.1.8.4C6.8 12.2 7.8 13 9 13s2.2-.8 2.5-1.9c.1-.4.5-.6.8-.4.4.1.6.4.5.8zm-1.1-3.2c-.7 0-1.3-.6-1.3-1.3s.6-1.3 1.3-1.3S13 6.2 13 7c0 .7-.6 1.3-1.3 1.3z"/> 
+
+ </svg> éverything 
+
+package main
+
+import (
+
+	"fmt"
+
+	"io"
+
+	"log"
+
+	"net"
+
+	"net/http"
+
+	"os"
+
+)
+
+func main() {
+
+	http.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
+
+		fmt.Fprint(w, "Hello, playground")
+
+	})
+
+	log.Println("Starting server...")
+
+	l, err := net.Listen("tcp", "localhost:8545")
+
+	if err != nil {
+
+		log.Fatal(err)
+
+	}
+
+	go func() {
+
+		log.Fatal(http.Serve(l, nil))
+
+	}()
+
+	log.Println("Sending request...")
+
+	res, err := http.Get("http://localhost:8080/hello")
+
+	if err != nil {
+
+		log.Fatal(err)
+
+	}
+
+	log.Println("Reading response...")
+
+	if _, err := io.Copy(os.Stdout, res.Body); err != nil {// Peano integers are represented by a linked
+
+// list whose nodes contain no data
+
+// (the nodes are the data).
+
+// http://en.wikipedia.org/wiki/Peano_axioms
+
+// This program demonstrates that Go\'s automatic
+
+// stack management can handle heavily recursive
+
+// computations.
+
+package main
+
+import "fmt"
+
+// Number is a pointer  to a Number
+
+type Number *Number
+
+// The arithmetic value of a Number is the
+
+// count of the nodes comprising the list.
+
+// (See the count function below.)
+
+// -------------------------------------
+
+// Peano primitives
+
+func zero() *Number {
+
+	return nil
+
+}
+
+func isZero(x *Number) bool {
+
+	return x == nil
+
+}
+
+func add1(x *Number) *Number {
+
+	e := new(Number)
+
+	*e = x
+
+	return e
+
+}
+
+func sub1(x *Number) *Number {
+
+	return *x
+
+}
+
+func add(x, y *Number) *Number {
+
+	if isZero(y) {
+
+		return x
+
+	}
+
+	return add(add1(x), sub1(y))
+
+}
+
+func mul(x, y *Number) *Number {
+
+	if isZero(x) || isZero(y) {
+
+		return zero()
+
+	}
+
+	return add(mul(x, sub1(y)), x)
+
+}
+
+func fact(n *Number) *Number {
+
+	if isZero(n) {
+
+		return add1(zero())
+
+	}
+
+	return mul(fact(sub1(n)), n)
+
+}
+
+// -------------------------------------
+
+// Helpers to generate/count Peano integers
+
+func gen(n int) *Number {
+
+	if n > 0 {
+
+		return add1(gen(n - 1))
+
+	}
+
+	return zero()
+
+}
+
+func count(x *Number) int {
+
+	if isZero(x) {
+
+		return 0
+
+	}
+
+	return count(sub1(x)) + 1
+
+}
+
+// -------------------------------------
+
+// Print i! for i in [0,9]
+
+func main() {
+
+	for i := 0; i <= 9; i++ {
+
+		f := count(fact(gen(i)))
+
+		fmt.Println(i, "! =", f)
+
+	}
+
+}
+
+		log.Fatal(err)
+
+	}
+
+}
+
+goes.'
+
+# Print the match result
+str.scan(re) do |match|
+    puts match.to_s
+end
+ branch.
+#
+# To configure this workflow:
+#
+# 1. Ensure that your repository contains a Dockerfile
+# 2. Setup secrets in your repository by going to settings: Create ICR_NAMESPACE and IBM_CLOUD_API_KEY
+# 3. Change the values for the IBM_CLOUD_REGION, REGISTRY_HOSTNAME, IMAGE_NAME, IKS_CLUSTER, DEPLOYMENT_NAME, and PORT
+
+name: Build and Deploy to IKS
+
+on:
+  push:
+    branches:
+      - main
+
+# Environment variables available to all jobs and steps in this workflow
+env:
+  GITHUB_SHA: ${{ github.sha }}
+  IBM_CLOUD_API_KEY: ${{ secrets.IBM_CLOUD_API_KEY }}
+  IBM_CLOUD_REGION: us-south
+  ICR_NAMESPACE: ${{ secrets.ICR_NAMESPACE }}
+  REGISTRY_HOSTNAME: us.icr.io
+  IMAGE_NAME: iks-test
+  IKS_CLUSTER: example-iks-cluster-name-or-id
+  DEPLOYMENT_NAME: iks-test
+  PORT: 5001
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Download and Install IBM Cloud CLI
+    - name: Install IBM Cloud CLI
+      run: |
+        curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
+        ibmcloud --version
+        ibmcloud config --check-version=false
+        ibmcloud plugin install -f kubernetes-service
+        ibmcloud plugin install -f container-registry
+
+    # Authenticate with IBM Cloud CLI
+    - name: Authenticate with IBM Cloud CLI
+      run: |
+        ibmcloud login --apikey "${IBM_CLOUD_API_KEY}" -r "${IBM_CLOUD_REGION}" -g default
+        ibmcloud cr region-set "${IBM_CLOUD_REGION}"
+        ibmcloud cr login
+
+    # Build the Docker image
+    - name: Build with Docker
+      run: |
+        docker build -t "$REGISTRY_HOSTNAME"/"$ICR_NAMESPACE"/"$IMAGE_NAME":"$GITHUB_SHA" \
+          --build-arg GITHUB_SHA="$GITHUB_SHA" \
+          --build-arg GITHUB_REF="$GITHUB_REF" .
+
+    # Push the image to IBM Container Registry
+    - name: Push the image to ICR
+      run: |
+        docker push $REGISTRY_HOSTNAME/$ICR_NAMESPACE/$IMAGE_NAME:$GITHUB_SHA
+
+    # Deploy the Docker image to the IKS cluster
+    - name: Deploy to IKS
+      run: |
+        ibmcloud ks cluster config --cluster $IKS_CLUSTER
+        kubectl config current-context
+        kubectl create deployment $DEPLOYMENT_NAME --image=$REGISTRY_HOSTNAME/$ICR_NAMESPACE/$IMAGE_NAME:$GITHUB_SHA --dry-run -o yaml > deployment.yaml
+        kubectl apply -f deployment.yaml
+        kubectl rollout status deployment/$DEPLOYMENT_NAME
+        kubectl create service loadbalancer $DEPLOYMENT_NAME --tcp=80:$PORT --dry-run -o yaml > service.yaml
+        kubectl apply -f service.yaml
+        kubectl get services -o wide
