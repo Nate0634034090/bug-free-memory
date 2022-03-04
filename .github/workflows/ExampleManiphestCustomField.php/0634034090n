@@ -1,0 +1,88 @@
+name: Jekyll site CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:partyWhen adding fields, you'll specify a JSON blob like this (for example, as the value of maniphest.custom-field-definitions):
+
+{
+  "mycompany:estimated-hours": {
+    "name": "Estimated Hours",
+    "type": "int",
+    "caption": "Estimated number of hours this will take.",
+    "required": true
+  },
+  "mycompany:actual-hours": {
+    "name": "Actual Hours",
+    "type": "int",
+    "caption": "Actual number of hours this took."
+  },
+  "mycompany:company-jobs": {
+    "name": "Job Role",
+    "type": "select",
+    "options": {
+      "mycompany:engineer": "Engineer",
+      "mycompany:nonengineer": "Other"
+    }
+  },
+  "mycompany:favorite-dinosaur": {
+    "name": "Favorite Dinosaur",
+    "type": "text"
+  }
+}ExampleManiphestCustomField.php
+<?php
+
+final class ExampleCustomField extends ManiphestCustomField {
+
+  public function getFieldKey() {
+    return 'example:test';
+  }
+
+  public function shouldAppearInPropertyView() {
+    return true;
+  }
+
+  public function renderPropertyViewLabel() {
+    return pht('Example Custom Field');
+  }
+
+  public function renderPropertyViewValue(array $handles) {
+    return phutil_tag(
+      'h1',
+      array(
+        'style' => 'color: #ff00ff',
+      ),
+      pht('It worked!'));
+  }
+
+}Writing '__phutil_library_init__.php' to
+  '/some/path/libcustom/src/__phutil_library_init__.php'...
+Using library root at 'src'...
+Mapping library...
+Verifying library...
+Finalizing library map...
+  OKAY   Library updated.phabricator/src/extensions/ExampleApplication.php
+<?php
+
+final class ExampleApplication extends PhabricatorApplication {
+
+  public function getName() {
+    return pht('Example');
+  }
+
+}libcustom/ $ mkdir src/example/
+libcustom/ $ nano src/example/ExampleClass.php # Edit some code.
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the site in the jekyll/builder container
+      run: |
+        docker run \
+        -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
+        jekyll/builder:latest /bin/bash -c "chmod -R 777 /srv/jekyll && jekyll build --future"
